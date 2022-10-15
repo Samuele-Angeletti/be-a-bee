@@ -33,6 +33,14 @@ public class @InputSystem : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""TouchScreen"",
+                    ""type"": ""Button"",
+                    ""id"": ""2d3b1cfd-ca14-48e3-bc99-b66b8e4bab63"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=2)""
                 }
             ],
             ""bindings"": [
@@ -57,6 +65,17 @@ public class @InputSystem : IInputActionCollection, IDisposable
                     ""action"": ""JumpDEMO"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8cec5721-f5d6-4447-8c47-0189675d4c40"",
+                    ""path"": ""<Touchscreen>/primaryTouch/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TouchScreen"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -67,6 +86,7 @@ public class @InputSystem : IInputActionCollection, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_JumpDEMO = m_Player.FindAction("JumpDEMO", throwIfNotFound: true);
+        m_Player_TouchScreen = m_Player.FindAction("TouchScreen", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -118,12 +138,14 @@ public class @InputSystem : IInputActionCollection, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_JumpDEMO;
+    private readonly InputAction m_Player_TouchScreen;
     public struct PlayerActions
     {
         private @InputSystem m_Wrapper;
         public PlayerActions(@InputSystem wrapper) { m_Wrapper = wrapper; }
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @JumpDEMO => m_Wrapper.m_Player_JumpDEMO;
+        public InputAction @TouchScreen => m_Wrapper.m_Player_TouchScreen;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -139,6 +161,9 @@ public class @InputSystem : IInputActionCollection, IDisposable
                 @JumpDEMO.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJumpDEMO;
                 @JumpDEMO.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJumpDEMO;
                 @JumpDEMO.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJumpDEMO;
+                @TouchScreen.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTouchScreen;
+                @TouchScreen.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTouchScreen;
+                @TouchScreen.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTouchScreen;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -149,6 +174,9 @@ public class @InputSystem : IInputActionCollection, IDisposable
                 @JumpDEMO.started += instance.OnJumpDEMO;
                 @JumpDEMO.performed += instance.OnJumpDEMO;
                 @JumpDEMO.canceled += instance.OnJumpDEMO;
+                @TouchScreen.started += instance.OnTouchScreen;
+                @TouchScreen.performed += instance.OnTouchScreen;
+                @TouchScreen.canceled += instance.OnTouchScreen;
             }
         }
     }
@@ -157,5 +185,6 @@ public class @InputSystem : IInputActionCollection, IDisposable
     {
         void OnJump(InputAction.CallbackContext context);
         void OnJumpDEMO(InputAction.CallbackContext context);
+        void OnTouchScreen(InputAction.CallbackContext context);
     }
 }

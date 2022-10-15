@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PubSub;
+using UnityEngine.InputSystem;
+using System;
 
 public class Player : MonoBehaviour, ISubscriber
 {
@@ -10,10 +12,13 @@ public class Player : MonoBehaviour, ISubscriber
 
     void Start()
     {
-        GameManager.Instance.Inputs.Player.JumpDEMO.performed += JumpDEMO_performed;
+        GameManager.Instance.Inputs.Player.JumpDEMO.performed += Jump_performed;
+        GameManager.Instance.Inputs.Player.TouchScreen.performed += Jump_performed;
+        //GameManager.Instance.Inputs.Player.tou.performed += Jump_performed;
         PubSub.PubSub.Subscribe(this, typeof(GameOverMessage));
         Debug();
     }
+
 
     public void Debug()
     {
@@ -23,11 +28,10 @@ public class Player : MonoBehaviour, ISubscriber
         //Invoke("DebugginTwo", 0);
     }
 
-    private void JumpDEMO_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void Jump_performed(InputAction.CallbackContext obj)
     {
         m_Flock.Jump();
     }
-
     void Update()
     {
         transform.position = m_Flock.GetLeaderPosition();
